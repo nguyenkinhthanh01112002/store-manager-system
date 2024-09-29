@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Checkbox, Flex, Form, Input, message, Typography } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { BaseButton } from '../../../components/ui'
 import { ROUTE_PATH } from '../../../constants/routePath'
 
@@ -66,7 +66,9 @@ function LoginPage() {
           <Form.Item name="remember" valuePropName="checked">
             <Flex align="center" justify="space-between" className="mt-6">
               <Checkbox className="text-primary">Lưu đăng nhập</Checkbox>
-              <BaseButton type="link">Quên mật khẩu?</BaseButton>
+              <Link to={ROUTE_PATH.FORGOT_PASSWORD}>
+                <BaseButton type="link">Quên mật khẩu?</BaseButton>
+              </Link>
             </Flex>
           </Form.Item>
         </Flex>
