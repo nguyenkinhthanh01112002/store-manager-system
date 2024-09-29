@@ -1,0 +1,22 @@
+body {
+  font-family: 'OpenSans500', sans-serif;
+}
+
+/* Local fonts */
+@font-face {
+  font-family: 'OpenSans400';
+  src: local('OpenSans400'),
+    url(../assets/font/OpenSans-Regular.ttf) format('opentype');
+}
+
+@font-face {
+  font-family: 'OpenSans500';
+  src: local('OpenSans500'),
+    url(../assets/font/OpenSans-Medium.ttf) format('opentype');
+}
+
+@font-face {
+  font-family: 'OpenSans700';
+  src: local('OpenSans700'),
+    url(../assets/font/OpenSans-Bold.ttf) format('opentype');
+}
