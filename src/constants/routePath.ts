@@ -2,6 +2,7 @@ export const ROUTE_PATH = {
   HOME: '/',
   LOGIN: '/dang-nhap',
   FORGOT_PASSWORD: '/quen-mat-khau',
+  RESET_PASSWORD: '/dat-lai-mat-khau',
   NOT_FOUND: '/404',
   NOT_AUTHORIZED: '/403',
   STAFF: {

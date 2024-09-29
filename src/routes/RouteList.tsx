@@ -12,6 +12,14 @@ const routes: RouteItem[] = [
     component: React.lazy(() => import('../features/Auth/pages/LoginPage'))
   },
   {
+    path: ROUTE_PATH.FORGOT_PASSWORD,
+    component: React.lazy(() => import('../features/Auth/pages/ForgotPasswordPage'))
+  },
+  {
+    path: ROUTE_PATH.RESET_PASSWORD,
+    component: React.lazy(() => import('../features/Auth/pages/ResetPasswordPage'))
+  },
+  {
     path: ROUTE_PATH.NOT_FOUND,
     component: React.lazy(() => import('../features/Auth/pages/NotFound'))
   },
