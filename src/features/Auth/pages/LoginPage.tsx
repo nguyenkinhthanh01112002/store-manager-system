@@ -1,8 +1,8 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Checkbox, Flex, Form, Input, message, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { BaseButton } from '../../../components/ui'
-import { ROUTE_PATH } from '../../../constants/routePath'
+import { BaseButton } from '~/components/ui'
+import { ROUTE_PATH } from '~/constants/routePath'
 
 type LoginForm = {
   username: string

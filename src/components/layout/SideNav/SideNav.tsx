@@ -2,8 +2,8 @@ import { HomeOutlined, ProductOutlined, UsergroupAddOutlined } from '@ant-design
 import type { MenuProps } from 'antd'
 import { Layout, Menu } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ROUTE_PATH } from '../../../constants/routePath'
-import { getDefaultPath } from '../../../utils/routeUtil'
+import { ROUTE_PATH } from '~/constants/routePath'
+import { getDefaultPath } from '~/utils/routeUtil'
 
 const { Sider } = Layout
 

@@ -2,7 +2,7 @@ import { BellOutlined, KeyOutlined, LogoutOutlined, UserOutlined } from '@ant-de
 import type { MenuProps } from 'antd'
 import { Avatar, Badge, Dropdown, Flex, Layout, Typography } from 'antd'
 import { Link } from 'react-router-dom'
-import { ROUTE_PATH } from '../../../constants/routePath'
+import { ROUTE_PATH } from '~/constants/routePath'
 
 const { Header } = Layout
 
