@@ -1,5 +1,5 @@
 import { Breadcrumb, Col, Flex, Form, Input, Row, Typography } from 'antd'
-import { BaseButton } from '../../../components/ui'
+import { BaseButton } from '~/components/ui'
 
 function AddPage() {
   const [form] = Form.useForm()
