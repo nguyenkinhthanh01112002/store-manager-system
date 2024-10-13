@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Card, Avatar, Typography, Form, Input, Button, message } from 'antd'
+import { Flex, Card, Avatar, Typography, Form, Input, Button, message } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '../../../constants/routePath'
-
 const { Title } = Typography
 
 interface ForgotPasswordFormValues {
@@ -25,7 +24,7 @@ function ForgotPasswordPage() {
 
   const handleSendOTP = () => {
     setCountdown(30)
-    message.success('Mã OTP đã được gửi.')
+    message.success('Mã OTP đã được gửi!')
   }
 
   const onFinish = (values: ForgotPasswordFormValues) => {
@@ -34,8 +33,8 @@ function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <Card className="w-[400px] shadow-lg">
+    <Flex justify="center" align="middle" className="min-h-screen bg-gray-100">
+      <Card className="w-[370px] shadow-lg">
         <div className="text-center">
           <Avatar size={64} icon={<UserOutlined />} className="bg-blue-500 mb-4" />
           <Title level={3}>Quên mật khẩu</Title>
@@ -68,7 +67,7 @@ function ForgotPasswordPage() {
           </Form.Item>
         </Form>
       </Card>
-    </div>
+    </Flex>
   )
 }
 

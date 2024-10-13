@@ -14,10 +14,10 @@ function ResetPasswordPage() {
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
 
-  const onFinish = (values: ResetPasswordForm) => {
+  const onFinish = async (values: ResetPasswordForm) => {
     console.log('Submitted:', values)
     // Implement your logic here
-    messageApi.success('Mật khẩu đã được đặt lại thành công.')
+    await messageApi.success('Mật khẩu đã được đặt lại thành công.')
     navigate(ROUTE_PATH.LOGIN)
   }
 

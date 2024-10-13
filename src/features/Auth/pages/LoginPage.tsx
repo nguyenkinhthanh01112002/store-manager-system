@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Checkbox, Flex, Form, Input, message, Typography } from 'antd'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { BaseButton } from '../../../components/ui'
 import { ROUTE_PATH } from '../../../constants/routePath'
 
@@ -21,7 +21,9 @@ function LoginPage() {
     password: '',
     remember: false
   }
-
+  const handleForgotPassword = () => {
+    navigate(ROUTE_PATH.FORGOT_PASSWORD);
+  }
   const onFinish = (values: LoginForm) => {
     console.log('Success:', values)
     if (values.username === 'username' && values.password === 'password') {
@@ -66,9 +68,9 @@ function LoginPage() {
           <Form.Item name="remember" valuePropName="checked">
             <Flex align="center" justify="space-between" className="mt-6">
               <Checkbox className="text-primary">Lưu đăng nhập</Checkbox>
-              <Link to={ROUTE_PATH.FORGOT_PASSWORD}>
-                <BaseButton type="link">Quên mật khẩu?</BaseButton>
-              </Link>
+              <BaseButton type="link" onClick={handleForgotPassword}>
+                Quên mật khẩu?
+              </BaseButton>
             </Flex>
           </Form.Item>
         </Flex>
