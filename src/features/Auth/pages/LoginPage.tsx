@@ -21,7 +21,9 @@ function LoginPage() {
     password: '',
     remember: false
   }
-
+  const handleForgotPassword = () => {
+    navigate(ROUTE_PATH.FORGOT_PASSWORD);
+  }
   const onFinish = (values: LoginForm) => {
     console.log('Success:', values)
     if (values.username === 'username' && values.password === 'password') {
@@ -66,7 +68,9 @@ function LoginPage() {
           <Form.Item name="remember" valuePropName="checked">
             <Flex align="center" justify="space-between" className="mt-6">
               <Checkbox className="text-primary">Lưu đăng nhập</Checkbox>
-              <BaseButton type="link">Quên mật khẩu?</BaseButton>
+              <BaseButton type="link" onClick={handleForgotPassword}>
+                Quên mật khẩu?
+              </BaseButton>
             </Flex>
           </Form.Item>
         </Flex>
