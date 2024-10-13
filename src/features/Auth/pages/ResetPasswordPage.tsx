@@ -1,8 +1,8 @@
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Flex, Form, Input, Typography, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { BaseButton } from '../../../components/ui'
-import { ROUTE_PATH } from '../../../constants/routePath'
+import { BaseButton } from '~/components/ui'
+import { ROUTE_PATH } from '~/constants/routePath'
 
 type ResetPasswordForm = {
   newPassword: string

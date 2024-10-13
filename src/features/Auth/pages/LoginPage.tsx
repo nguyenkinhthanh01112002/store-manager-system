@@ -1,18 +1,28 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Checkbox, Flex, Form, Input, message, Typography } from 'antd'
+import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { BaseButton } from '~/components/ui'
 import { ROUTE_PATH } from '~/constants/routePath'
-
-type LoginForm = {
-  username: string
-  password: string
-  remember?: boolean
-}
+import { LoginRequest } from '~/models/auth'
+import authService from '~/services/auth.service'
 
 function LoginPage() {
   const [form] = Form.useForm()
   const navigate = useNavigate()
+
+  const { mutate: login, isPending: isPendingLogin } = useMutation({
+    mutationFn: (data: LoginRequest) => authService.login(data),
+    onSuccess: () => {
+      navigate(ROUTE_PATH.HOME)
+    },
+    onError: () => {
+      messageApi.open({
+        type: 'error',
+        content: 'Sai tài khoản hoặc mật khẩu'
+      })
+    }
+  })
 
   const [messageApi, contextHolder] = message.useMessage()
 
@@ -21,19 +31,13 @@ function LoginPage() {
     password: '',
     remember: false
   }
+
   const handleForgotPassword = () => {
     navigate(ROUTE_PATH.FORGOT_PASSWORD);
   }
-  const onFinish = (values: LoginForm) => {
-    console.log('Success:', values)
-    if (values.username === 'username' && values.password === 'password') {
-      navigate(ROUTE_PATH.HOME)
-    } else {
-      messageApi.open({
-        type: 'error',
-        content: 'Sai tài khoản hoặc mật khẩu'
-      })
-    }
+
+  const onFinish = (values: LoginRequest) => {
+    login(values)
   }
 
   return (
@@ -62,7 +66,7 @@ function LoginPage() {
           <Form.Item name="password" className="w-full" rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}>
             <Input.Password size="large" placeholder="Mật khẩu" />
           </Form.Item>
-          <BaseButton size="large" className="w-full" htmlType="submit">
+          <BaseButton size="large" className="w-full" htmlType="submit" loading={isPendingLogin}>
             Đăng nhập
           </BaseButton>
           <Form.Item name="remember" valuePropName="checked">

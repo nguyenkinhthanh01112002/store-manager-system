@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Flex, Card, Avatar, Typography, Form, Input, Button, message } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { ROUTE_PATH } from '../../../constants/routePath'
+import { ROUTE_PATH } from '~/constants/routePath'
 const { Title } = Typography
 
 interface ForgotPasswordFormValues {
