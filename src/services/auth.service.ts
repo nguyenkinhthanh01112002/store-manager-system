@@ -92,42 +92,42 @@ const authService = {
     try {
       const response = await api.post(END_POINT.VERIFY_OTP, data)
       console.log('Full Verify OTP response:', response)
-      
       // Response đã là dữ liệu chúng ta cần, không cần truy cập .data
-      const responseData = response;
-      
-      if (responseData && typeof responseData === 'object' && 'code' in responseData && 'emailOrPhone' in responseData) {
-        return responseData as VerifyOTPResponse;
+      const responseData = response
+
+      if (
+        responseData &&
+        typeof responseData === 'object' &&
+        'code' in responseData &&
+        'emailOrPhone' in responseData
+      ) {
+        return responseData as VerifyOTPResponse
       } else {
-        console.error('Invalid response format:', responseData);
-        throw new Error('Invalid response format');
+        console.error('Invalid response format:', responseData)
+        throw new Error('Invalid response format')
       }
     } catch (error: any) {
       console.error('Verify OTP error:', error.response?.data || error.message)
       throw error
     }
-  }
-  ,
+  },
   resetPassword: async (data: { newPassword: string; confirmPassword: string }, code: string): Promise<any> => {
     try {
-      console.log('Reset password request data:', { ...data, code });
-      
-      const response = await api.post(
-        `${END_POINT.RESET_PASSWORD}?code=${encodeURIComponent(code)}`,
-        {
-          newPassword: data.newPassword,
-          confirmPassword: data.confirmPassword
-        }
-      );
-      
-      console.log('Reset password response:', response.data);
-      return response.data;
+      console.log('Reset password request data:', { ...data, code })
+      const response = await api.post(`${END_POINT.RESET_PASSWORD}?code=${encodeURIComponent(code)}`, {
+        newPassword: data.newPassword,
+        confirmPassword: data.confirmPassword
+      })
+      console.log('Reset password response:', response.data)
+      return response.data
     } catch (error: any) {
-      console.error('Reset password error:', error.response?.data || error.message);
+      console.error('Reset password error:', error.response?.data || error.message)
       if (error.response && error.response.data) {
-        throw new Error(typeof error.response.data === 'string' ? error.response.data : JSON.stringify(error.response.data));
+        throw new Error(
+          typeof error.response.data === 'string' ? error.response.data : JSON.stringify(error.response.data)
+        )
       }
-      throw error;
+      throw error
     }
   }
 }
