@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { VITE_APP_API_URL } from '../config/env'
+import { VITE_APP_API_URL } from '~/config/env'
 
 function handleSuccess(response: AxiosResponse) {
   return response?.data

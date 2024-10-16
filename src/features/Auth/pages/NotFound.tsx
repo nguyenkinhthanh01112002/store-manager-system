@@ -1,7 +1,7 @@
 import { Result } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { BaseButton } from '../../../components/ui'
-import { ROUTE_PATH } from '../../../constants/routePath'
+import { BaseButton } from '~/components/ui'
+import { ROUTE_PATH } from '~/constants/routePath'
 
 function NotFound() {
   const navigate = useNavigate()

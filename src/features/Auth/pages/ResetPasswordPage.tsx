@@ -1,9 +1,10 @@
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Flex, Form, Input, Typography, message } from 'antd'
-import { useNavigate } from 'react-router-dom'
-import { BaseButton } from '../../../components/ui'
-import { ROUTE_PATH } from '../../../constants/routePath'
-
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { BaseButton } from '~/components/ui'
+import { ROUTE_PATH } from '~/constants/routePath'
+import { useMutation } from '@tanstack/react-query'
+import authService from '~/services/auth.service'
 type ResetPasswordForm = {
   newPassword: string
   confirmPassword: string
@@ -13,14 +14,50 @@ function ResetPasswordPage() {
   const [form] = Form.useForm<ResetPasswordForm>()
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
-
-  const onFinish = (values: ResetPasswordForm) => {
+  // Lấy code từ URL
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get('code');
+  console.log('Code from URL:', code)
+ 
+  const resetPasswordMutation = useMutation({
+    mutationFn: (values: { newPassword: string; confirmPassword: string }) => {
+      const code = new URLSearchParams(window.location.search).get('code');
+      if (!code) {
+        throw new Error('Missing reset code');
+      }
+      return authService.resetPassword(values, code);
+    },
+    onSuccess: (data) => {
+      message.success(data.message || 'Đặt lại mật khẩu thành công!');
+      navigate(ROUTE_PATH.LOGIN);
+    },
+    onError: (error: any) => {
+      console.error('Reset password mutation error:', error);
+      switch (error.message) {
+        case 'Verification code is required.':
+          message.error('Mã xác thực là bắt buộc.');
+          navigate(ROUTE_PATH.FORGOT_PASSWORD);
+          break;
+        case 'Invalid verification code.':
+          message.error('Mã xác thực không hợp lệ.');
+          navigate(ROUTE_PATH.FORGOT_PASSWORD);
+          break;
+        case 'Verification code has expired.':
+          message.error('Mã xác thực đã hết hạn.');
+          navigate(ROUTE_PATH.FORGOT_PASSWORD);
+          break;
+        default:
+          message.error(error.message || 'Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại.');
+      }
+    }
+  });
+  const onFinish = async (values: ResetPasswordForm) => {
+    resetPasswordMutation.mutate(values)
     console.log('Submitted:', values)
     // Implement your logic here
-    messageApi.success('Mật khẩu đã được đặt lại thành công.')
+    await messageApi.success('Mật khẩu đã được đặt lại thành công.')
     navigate(ROUTE_PATH.LOGIN)
   }
-
   return (
     <Form form={form} onFinish={onFinish}>
       {contextHolder}
@@ -59,8 +96,8 @@ function ResetPasswordPage() {
                     return Promise.resolve()
                   }
                   return Promise.reject(new Error('Mật khẩu xác nhận không khớp'))
-                },
-              }),
+                }
+              })
             ]}
           >
             <Input.Password prefix={<LockOutlined />} size="large" placeholder="Xác nhận mật khẩu mới" />

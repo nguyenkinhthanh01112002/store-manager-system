@@ -16,8 +16,8 @@ import { useState } from 'react'
 import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 
-import { BaseButton } from '../../../components/ui'
-import { ROUTE_PATH } from '../../../constants/routePath'
+import { BaseButton } from '~/components/ui'
+import { ROUTE_PATH } from '~/constants/routePath'
 
 const columns: TableColumnsType = [
   { title: 'Tên', dataIndex: 'name' },
