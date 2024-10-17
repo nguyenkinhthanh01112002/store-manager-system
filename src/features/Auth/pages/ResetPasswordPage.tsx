@@ -59,8 +59,8 @@ function ResetPasswordPage() {
                     return Promise.resolve()
                   }
                   return Promise.reject(new Error('Mật khẩu xác nhận không khớp'))
-                },
-              }),
+                }
+              })
             ]}
           >
             <Input.Password prefix={<LockOutlined />} size="large" placeholder="Xác nhận mật khẩu mới" />
