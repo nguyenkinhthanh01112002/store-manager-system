@@ -33,7 +33,7 @@ function LoginPage() {
   }
 
   const handleForgotPassword = () => {
-    navigate(ROUTE_PATH.FORGOT_PASSWORD);
+    navigate(ROUTE_PATH.FORGOT_PASSWORD)
   }
 
   const onFinish = (values: LoginRequest) => {
