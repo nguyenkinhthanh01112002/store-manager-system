@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { VITE_APP_API_URL } from '~/config/env'
+import { VITE_APP_API_URL } from '../config/env'
 
 function handleSuccess(response: AxiosResponse) {
   return response?.data
@@ -12,20 +12,22 @@ function handleError(error: AxiosError) {
 const api = axios.create({
   baseURL: VITE_APP_API_URL,
   headers: {
-    'Content-type': 'application/json; charset=utf-8'
+    'Content-type': 'application/json charset=utf-8'
   }
 })
 
 api.interceptors.request.use(
   async function (config: any) {
-    // TODO: config token here
+    const token = localStorage.getItem('AccessToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   function (error) {
-    return handleError(error)
+    return Promise.reject(error)
   }
 )
-
 api.interceptors.response.use(
   function (response) {
     return handleSuccess(response)
