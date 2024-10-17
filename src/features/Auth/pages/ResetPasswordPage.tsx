@@ -1,8 +1,8 @@
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Flex, Form, Input, Typography, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { BaseButton } from '../../../components/ui'
-import { ROUTE_PATH } from '../../../constants/routePath'
+import { BaseButton } from '~/components/ui'
+import { ROUTE_PATH } from '~/constants/routePath'
 
 type ResetPasswordForm = {
   newPassword: string
@@ -14,10 +14,10 @@ function ResetPasswordPage() {
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
 
-  const onFinish = (values: ResetPasswordForm) => {
+  const onFinish = async (values: ResetPasswordForm) => {
     console.log('Submitted:', values)
     // Implement your logic here
-    messageApi.success('Mật khẩu đã được đặt lại thành công.')
+    await messageApi.success('Mật khẩu đã được đặt lại thành công.')
     navigate(ROUTE_PATH.LOGIN)
   }
 
@@ -59,8 +59,8 @@ function ResetPasswordPage() {
                     return Promise.resolve()
                   }
                   return Promise.reject(new Error('Mật khẩu xác nhận không khớp'))
-                },
-              }),
+                }
+              })
             ]}
           >
             <Input.Password prefix={<LockOutlined />} size="large" placeholder="Xác nhận mật khẩu mới" />

@@ -1,5 +1,5 @@
 import { Button, ButtonProps, ConfigProvider } from 'antd'
-import { COLORS } from '../../../constants/colors'
+import { COLORS } from '~/constants/colors'
 
 interface IBaseButton extends ButtonProps {
   variant?: 'container' | 'outlined'

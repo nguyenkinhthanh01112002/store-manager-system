@@ -2,14 +2,22 @@ import { Spin } from 'antd'
 import React, { Fragment, Suspense } from 'react'
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
 
-import { RouteItem } from '../models/routes'
-import { ROUTE_PATH } from '../constants/routePath'
-import { BaseLayout } from '../components/layout'
+import { RouteItem } from '~/models/routes'
+import { ROUTE_PATH } from '~/constants/routePath'
+import { BaseLayout } from '~/components/layout'
 
 const routes: RouteItem[] = [
   {
     path: ROUTE_PATH.LOGIN,
-    component: React.lazy(() => import('../features/Auth/pages/LoginPage'))
+    component: React.lazy(() => import('~/features/Auth/pages/LoginPage'))
+  },
+  {
+    path: ROUTE_PATH.FORGOT_PASSWORD,
+    component: React.lazy(() => import('../features/Auth/pages/ForgotPasswordPage'))
+  },
+  {
+    path: ROUTE_PATH.RESET_PASSWORD,
+    component: React.lazy(() => import('../features/Auth/pages/ResetPasswordPage'))
   },
   {
     path: ROUTE_PATH.FORGOT_PASSWORD,
@@ -21,11 +29,11 @@ const routes: RouteItem[] = [
   },
   {
     path: ROUTE_PATH.NOT_FOUND,
-    component: React.lazy(() => import('../features/Auth/pages/NotFound'))
+    component: React.lazy(() => import('~/features/Auth/pages/NotFound'))
   },
   {
     path: ROUTE_PATH.NOT_AUTHORIZED,
-    component: React.lazy(() => import('../features/Auth/pages/NotAuthorized'))
+    component: React.lazy(() => import('~/features/Auth/pages/NotAuthorized'))
   },
   {
     path: '/',
@@ -33,27 +41,27 @@ const routes: RouteItem[] = [
     routes: [
       {
         path: ROUTE_PATH.HOME,
-        component: React.lazy(() => import('../features/Home/pages/HomePage'))
+        component: React.lazy(() => import('~/features/Home/pages/HomePage'))
       },
       // Staff
       {
         path: ROUTE_PATH.STAFF.MANAGER.LIST,
-        component: React.lazy(() => import('../features/Staff/pages/ListPage'))
+        component: React.lazy(() => import('~/features/Staff/pages/ListPage'))
       },
       {
         path: ROUTE_PATH.STAFF.MANAGER.ADD,
-        component: React.lazy(() => import('../features/Staff/pages/AddPage'))
+        component: React.lazy(() => import('~/features/Staff/pages/AddPage'))
       },
       // Category
       {
         path: ROUTE_PATH.PRODUCT.CATEGORY.LIST,
-        component: React.lazy(() => import('../features/Product/pages/ListPage'))
+        component: React.lazy(() => import('~/features/Product/pages/ListPage'))
       }
     ]
   },
   {
     path: '*',
-    component: React.lazy(() => import('../features/Auth/pages/NotFound'))
+    component: React.lazy(() => import('~/features/Auth/pages/NotFound'))
   }
 ]
 

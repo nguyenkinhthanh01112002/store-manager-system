@@ -1,3 +1,4 @@
+import { LoginRequest, LoginResponse } from '../models/auth'
 import api from './api'
 
 const END_POINT = {
@@ -5,8 +6,7 @@ const END_POINT = {
 }
 
 const authService = {
-  login: (data: any): Promise<any> => {
-    // TODO: change any type
+  login: (data: LoginRequest): Promise<LoginResponse> => {
     return api.post(END_POINT.LOGIN, data)
   }
 }
