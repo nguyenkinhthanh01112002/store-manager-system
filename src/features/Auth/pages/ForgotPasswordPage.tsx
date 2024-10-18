@@ -3,10 +3,12 @@ import { Flex, Card, Avatar, Typography, Form, Input, Button, message } from 'an
 import { UserOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '~/constants/routePath'
+import { ForgotPasswordRequest, VerifyOtpRequest } from '~/models/auth'
+import authService from '~/services/auth.service'
 const { Title } = Typography
 
 interface ForgotPasswordFormValues {
-  email: string
+  emailOrPhone: string
   otp: string
 }
 
@@ -14,7 +16,8 @@ function ForgotPasswordPage() {
   const [form] = Form.useForm<ForgotPasswordFormValues>()
   const navigate = useNavigate()
   const [countdown, setCountdown] = useState(0)
-
+  const [loading, setLoading] = useState(false)
+  const [otpSent, setOtpSent] = useState(false)
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
@@ -22,14 +25,41 @@ function ForgotPasswordPage() {
     }
   }, [countdown])
 
-  const handleSendOTP = () => {
-    setCountdown(30)
-    message.success('Mã OTP đã được gửi!')
+  const handleSendOTP = async () => {
+    try {
+      const emailOrPhone = form.getFieldValue('emailOrPhone')
+      if (!emailOrPhone) {
+        message.error('Vui lòng nhập email hoặc số điện thoại!')
+        return
+      }
+      setLoading(true)
+      const forgotPasswordRequest: ForgotPasswordRequest = { emailOrPhone }
+      await authService.forgotPassword(forgotPasswordRequest)
+      setCountdown(30)
+      setOtpSent(true)
+      message.success('Mã xác thực đã được gửi!')
+    } catch {
+      message.error('Có lỗi xảy ra khi gửi mã xác thực. Vui lòng thử lại!')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const onFinish = (values: ForgotPasswordFormValues) => {
-    console.log('Received values:', values)
-    navigate(ROUTE_PATH.RESET_PASSWORD)
+  const onFinish = async (values: ForgotPasswordFormValues) => {
+    try {
+      setLoading(true)
+      const verifyOtpRequest: VerifyOtpRequest = {
+        emailOrPhone: values.emailOrPhone,
+        otp: values.otp
+      }
+      await authService.verifyResetOtp(verifyOtpRequest)
+      message.success('Xác thực mã thành công!')
+      navigate(ROUTE_PATH.RESET_PASSWORD, { state: { emailOrPhone: values.emailOrPhone, otp: values.otp } })
+    } catch {
+      message.error('Mã xác thực không hợp lệ hoặc đã hết hạn. Vui lòng thử lại!')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -41,27 +71,32 @@ function ForgotPasswordPage() {
         </div>
         <Form<ForgotPasswordFormValues> form={form} onFinish={onFinish} layout="vertical">
           <Form.Item
-            name="email"
+            name="emailOrPhone"
             rules={[
               { required: true, message: 'Vui lòng nhập email!' },
               { type: 'email', message: 'Email không hợp lệ!' }
             ]}
           >
-            <Input placeholder="Nhập email của bạn" size="large" />
+            <Input placeholder="Nhập email hoặc số điện thoại của bạn" size="large" />
           </Form.Item>
           <Form.Item name="otp" rules={[{ required: true, message: 'Vui lòng nhập mã OTP!' }]}>
             <Input.Search
               placeholder="Nhập mã OTP"
               size="large"
               enterButton={
-                <Button type="primary" onClick={handleSendOTP} disabled={countdown > 0}>
+                <Button 
+                type="primary" 
+                onClick={handleSendOTP} 
+                disabled={countdown > 0 || loading}
+                loading={loading && !otpSent}
+              >
                   {countdown > 0 ? `Gửi OTP (${countdown}s)` : 'Gửi OTP'}
                 </Button>
               }
             />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" block>
+          <Button type="primary" htmlType="submit" size="large" block loading={loading}>
               Đặt lại mật khẩu
             </Button>
           </Form.Item>
