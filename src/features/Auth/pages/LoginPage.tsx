@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { BaseButton } from '~/components/ui'
 import { ROUTE_PATH } from '~/constants/routePath'
-import { LoginRequest } from '~/models/auth'
+import { LoginRequest, LoginResponse } from '~/models/auth'
 import authService from '~/services/auth.service'
 
 function LoginPage() {
@@ -13,21 +13,35 @@ function LoginPage() {
 
   const { mutate: login, isPending: isPendingLogin } = useMutation({
     mutationFn: (data: LoginRequest) => authService.login(data),
-    onSuccess: () => {
+    onSuccess: (response: LoginResponse) => {
+      console.log(response)
+      localStorage.setItem('AccessToken', response.accessToken)
+      localStorage.setItem('RefreshToken', response.refreshToken)
+      messageApi.open({
+        type: 'success',
+        content: 'Đăng nhập thành công'
+      })
       navigate(ROUTE_PATH.HOME)
     },
-    onError: () => {
-      messageApi.open({
-        type: 'error',
-        content: 'Sai tài khoản hoặc mật khẩu'
-      })
+    onError: (error: any) => {
+      if (error.response?.status === 401) {
+        messageApi.open({
+          type: 'error',
+          content: 'Sai tài khoản hoặc mật khẩu'
+        })
+      } else {
+        messageApi.open({
+          type: 'error',
+          content: 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
+        })
+      }
     }
   })
 
   const [messageApi, contextHolder] = message.useMessage()
 
   const defaultValues = {
-    username: '',
+    emailOrPhone: '',
     password: '',
     remember: false
   }
@@ -57,7 +71,7 @@ function LoginPage() {
             Đăng nhập
           </Typography.Title>
           <Form.Item
-            name="username"
+            name="emailOrPhone"
             className="w-full mt-4"
             rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập' }]}
           >
