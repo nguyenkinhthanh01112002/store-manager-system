@@ -2,7 +2,7 @@ import { LoginRequest, LoginResponse } from '../models/auth'
 import api from './api'
 
 const END_POINT = {
-  LOGIN: 'api/Account/login'
+  LOGIN: 'api/account/login'
 }
 
 const authService = {

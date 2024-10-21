@@ -14,7 +14,6 @@ function LoginPage() {
   const { mutate: login, isPending: isPendingLogin } = useMutation({
     mutationFn: (data: LoginRequest) => authService.login(data),
     onSuccess: (response: LoginResponse) => {
-      console.log(response)
       localStorage.setItem('AccessToken', response.accessToken)
       localStorage.setItem('RefreshToken', response.refreshToken)
       messageApi.open({
