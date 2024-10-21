@@ -3,9 +3,9 @@ import api from './api'
 
 const END_POINT = {
   LOGIN: '/v1/api/login',
-  FORGOT_PASSWORD: '/api/Account/forgot-password',
-  VERYFI_OTP: '/api/Account/verify-reset-otp',
-  RESET_PASSWORD: '/api/Account/reset-password'
+  FORGOT_PASSWORD: '/api/account/forgot-password',
+  VERYFI_OTP: '/api/account/verify-reset-otp',
+  RESET_PASSWORD: '/api/account/reset-password'
 }
 
 const authService = {
