@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Flex, Form, Input, Typography, message } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
 import { BaseButton } from '~/components/ui'
 import { ROUTE_PATH } from '~/constants/routePath'
 import authService from '~/services/auth.service'
@@ -15,8 +16,6 @@ function ResetPasswordPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const [messageApi, contextHolder] = message.useMessage()
-  const [isLoading, setIsLoading] = useState(false)
-
   const [otp, setOtp] = useState('')
 
   useEffect(() => {
@@ -28,28 +27,31 @@ function ResetPasswordPage() {
       navigate(ROUTE_PATH.FORGOT_PASSWORD)
     }
   }, [location, messageApi, navigate])
-  
-  const onFinish = async (values: ResetPasswordForm) => {
-    setIsLoading(true)
-    try {
-      await authService.resetPassword(
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: (values: ResetPasswordForm) => 
+      authService.resetPassword(
         { 
           newPassword: values.newPassword,
           confirmPassWord: values.confirmPassword
         }, 
         otp
-      )
-      await messageApi.success('Mật khẩu đã được đặt lại thành công.')
+      ),
+    onSuccess: () => {
+      messageApi.success('Mật khẩu đã được đặt lại thành công.')
       navigate(ROUTE_PATH.LOGIN)
-    } catch (error) {
+    },
+    onError: (error: unknown) => {
       if (error instanceof Error) {
         messageApi.error(error.message || 'Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại.')
       } else {
         messageApi.error('Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại.')
       }
-    } finally {
-      setIsLoading(false)
     }
+  })
+
+  const onFinish = (values: ResetPasswordForm) => {
+    resetPasswordMutation.mutate(values)
   }
 
   return (
@@ -101,7 +103,7 @@ function ResetPasswordPage() {
           >
             <Input.Password prefix={<LockOutlined />} size="large" placeholder="Xác nhận mật khẩu mới" />
           </Form.Item>
-          <BaseButton size="large" className="w-full mt-4" htmlType="submit" loading={isLoading}>
+          <BaseButton size="large" className="w-full mt-4" htmlType="submit" loading={resetPasswordMutation.isPending}>
             Đặt lại mật khẩu
           </BaseButton>
           <BaseButton type="link" className="mt-4" onClick={() => navigate(ROUTE_PATH.LOGIN)}>
@@ -112,5 +114,4 @@ function ResetPasswordPage() {
     </Form>
   )
 }
-
 export default ResetPasswordPage
