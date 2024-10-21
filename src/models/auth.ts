@@ -5,7 +5,7 @@ export type LoginRequest = {
 }
 
 export type LoginResponse = {
-  access_token: string
-  expires_in: number
-  refresh_token: string
+  accessToken: string
+  expireTime: number
+  refreshToken: string
 }
