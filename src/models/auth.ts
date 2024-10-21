@@ -5,9 +5,9 @@ export type LoginRequest = {
 }
 
 export type LoginResponse = {
-  access_token: string
-  expires_in: number
-  refresh_token: string
+  accessToken: string
+  expireTime: number
+  refreshToken: string
 }
 
 export type ForgotPasswordRequest = {
@@ -18,7 +18,11 @@ export type VerifyOtpRequest = {
   emailOrPhone: string
   otp: string
 }
+export type VerifyOtpResponse = {
+  emailOrPhone: string
+  otp: string
 
+}
 export type ResetPasswordRequest = {
   newPassword: string
   confirmPassWord: string

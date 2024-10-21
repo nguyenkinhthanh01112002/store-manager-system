@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 import { BaseButton } from '~/components/ui'
 import { ROUTE_PATH } from '~/constants/routePath'
 import authService from '~/services/auth.service'
+import { ResetPasswordRequest } from '~/models/auth'
 type ResetPasswordForm = {
   newPassword: string
   confirmPassword: string
@@ -27,15 +28,10 @@ function ResetPasswordPage() {
       navigate(ROUTE_PATH.FORGOT_PASSWORD)
     }
   }, [location, messageApi, navigate])
-
-  const resetPasswordMutation = useMutation({
-    mutationFn: (values: ResetPasswordForm) => 
-      authService.resetPassword(
-        { 
-          newPassword: values.newPassword,
-          confirmPassWord: values.confirmPassword
-        }, 
-        otp
+  
+  const { mutate: resetPasswordConfirm, isPending: isResettingPassword } = useMutation({
+    mutationFn: (data: ResetPasswordRequest) => 
+      authService.resetPassword(data,otp
       ),
     onSuccess: () => {
       messageApi.success('Mật khẩu đã được đặt lại thành công.')
@@ -51,9 +47,12 @@ function ResetPasswordPage() {
   })
 
   const onFinish = (values: ResetPasswordForm) => {
-    resetPasswordMutation.mutate(values)
+    const resetPasswordRequest: ResetPasswordRequest = {
+      newPassword: values.newPassword,
+      confirmPassWord: values.confirmPassword
+    }
+    resetPasswordConfirm(resetPasswordRequest)
   }
-
   return (
     <Form form={form} onFinish={onFinish}>
       {contextHolder}
@@ -103,7 +102,7 @@ function ResetPasswordPage() {
           >
             <Input.Password prefix={<LockOutlined />} size="large" placeholder="Xác nhận mật khẩu mới" />
           </Form.Item>
-          <BaseButton size="large" className="w-full mt-4" htmlType="submit" loading={resetPasswordMutation.isPending}>
+          <BaseButton size="large" className="w-full mt-4" htmlType="submit" loading={isResettingPassword}>
             Đặt lại mật khẩu
           </BaseButton>
           <BaseButton type="link" className="mt-4" onClick={() => navigate(ROUTE_PATH.LOGIN)}>
