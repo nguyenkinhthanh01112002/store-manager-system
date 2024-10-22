@@ -9,3 +9,21 @@ export type LoginResponse = {
   expireTime: number
   refreshToken: string
 }
+
+export type ForgotPasswordRequest = {
+  emailOrPhone: string
+}
+
+export type VerifyOtpRequest = {
+  emailOrPhone: string
+  otp: string
+}
+export type VerifyOtpResponse = {
+  emailOrPhone: string
+  otp: string
+
+}
+export type ResetPasswordRequest = {
+  newPassword: string
+  confirmPassWord: string
+}

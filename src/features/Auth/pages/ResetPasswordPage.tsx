@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Flex, Form, Input, Typography, message } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
 import { BaseButton } from '~/components/ui'
 import { ROUTE_PATH } from '~/constants/routePath'
-
+import authService from '~/services/auth.service'
+import { ResetPasswordRequest } from '~/models/auth'
 type ResetPasswordForm = {
   newPassword: string
   confirmPassword: string
@@ -12,15 +15,44 @@ type ResetPasswordForm = {
 function ResetPasswordPage() {
   const [form] = Form.useForm<ResetPasswordForm>()
   const navigate = useNavigate()
+  const location = useLocation()
   const [messageApi, contextHolder] = message.useMessage()
+  const [otp, setOtp] = useState('')
 
-  const onFinish = async (values: ResetPasswordForm) => {
-    console.log('Submitted:', values)
-    // Implement your logic here
-    await messageApi.success('Mật khẩu đã được đặt lại thành công.')
-    navigate(ROUTE_PATH.LOGIN)
+  useEffect(() => {
+    const state = location.state as { emailOrPhone: string; otp: string } | undefined
+    if ( state?.otp) {
+      setOtp(state.otp)
+    } else {
+      messageApi.error('Thông tin xác thực không hợp lệ.')
+      navigate(ROUTE_PATH.FORGOT_PASSWORD)
+    }
+  }, [location, messageApi, navigate])
+  
+  const { mutate: resetPasswordConfirm, isPending: isResettingPassword } = useMutation({
+    mutationFn: (data: ResetPasswordRequest) => 
+      authService.resetPassword(data,otp
+      ),
+    onSuccess: () => {
+      messageApi.success('Mật khẩu đã được đặt lại thành công.')
+      navigate(ROUTE_PATH.LOGIN)
+    },
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        messageApi.error(error.message || 'Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại.')
+      } else {
+        messageApi.error('Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại.')
+      }
+    }
+  })
+
+  const onFinish = (values: ResetPasswordForm) => {
+    const resetPasswordRequest: ResetPasswordRequest = {
+      newPassword: values.newPassword,
+      confirmPassWord: values.confirmPassword
+    }
+    resetPasswordConfirm(resetPasswordRequest)
   }
-
   return (
     <Form form={form} onFinish={onFinish}>
       {contextHolder}
@@ -42,10 +74,15 @@ function ResetPasswordPage() {
             className="w-full"
             rules={[
               { required: true, message: 'Vui lòng nhập mật khẩu mới' },
-              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự' }
+              { min: 8, message: 'Mật khẩu phải có ít nhất 8 ký tự' }
             ]}
           >
-            <Input.Password prefix={<LockOutlined />} size="large" placeholder="Mật khẩu mới" />
+            <Input.Password 
+              prefix={<LockOutlined />} 
+              size="large" 
+              placeholder="Mật khẩu mới" 
+              aria-label="New Password"
+            />
           </Form.Item>
           <Form.Item
             name="confirmPassword"
@@ -65,7 +102,7 @@ function ResetPasswordPage() {
           >
             <Input.Password prefix={<LockOutlined />} size="large" placeholder="Xác nhận mật khẩu mới" />
           </Form.Item>
-          <BaseButton size="large" className="w-full mt-4" htmlType="submit">
+          <BaseButton size="large" className="w-full mt-4" htmlType="submit" loading={isResettingPassword}>
             Đặt lại mật khẩu
           </BaseButton>
           <BaseButton type="link" className="mt-4" onClick={() => navigate(ROUTE_PATH.LOGIN)}>
@@ -76,5 +113,4 @@ function ResetPasswordPage() {
     </Form>
   )
 }
-
 export default ResetPasswordPage
