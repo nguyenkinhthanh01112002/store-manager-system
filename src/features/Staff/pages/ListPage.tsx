@@ -1,3 +1,4 @@
+import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import {
   Breadcrumb,
   Flex,
@@ -13,16 +14,27 @@ import {
   Typography
 } from 'antd'
 import { useState } from 'react'
-import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 
+import { useQuery } from '@tanstack/react-query'
 import { BaseButton } from '~/components/ui'
 import { ROUTE_PATH } from '~/constants/routePath'
+import { QUERY_KEY } from '~/constants/query'
+import { getRoleDisplayName } from '~/utils/staff'
+import staffService from '~/services/staff.service'
 
 const columns: TableColumnsType = [
+  { title: 'Email', dataIndex: 'email' },
   { title: 'Tên', dataIndex: 'name' },
-  { title: 'Tuổi', dataIndex: 'age' },
-  { title: 'Địa chỉ', dataIndex: 'address' },
+  {
+    title: 'Ngày sinh',
+    dataIndex: 'dob'
+  },
+  {
+    title: 'Vị trí',
+    dataIndex: 'role',
+    render: (_, { role }) => getRoleDisplayName(role)
+  },
   {
     title: 'Trạng thái',
     dataIndex: 'status',
@@ -45,14 +57,6 @@ const columns: TableColumnsType = [
   }
 ]
 
-const dataSource = Array.from({ length: 36 }).map((_, i) => ({
-  key: i,
-  name: `Trần Văn ${i}`,
-  age: 22,
-  address: `Đà Nẵng ${i}`,
-  status: i % 2 === 0 ? 'active' : 'inactive'
-}))
-
 const items: TabsProps['items'] = [
   {
     key: '1',
@@ -71,6 +75,11 @@ const items: TabsProps['items'] = [
 function ListPage() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const navigate = useNavigate()
+
+  const { data: staffs, isLoading: isLoadingStaffs } = useQuery({
+    queryKey: [QUERY_KEY.STAFF.LIST],
+    queryFn: () => staffService.getList()
+  })
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys)
@@ -145,7 +154,7 @@ function ListPage() {
             </Popconfirm>
           </Space>
         </Flex>
-        <Table rowSelection={rowSelection} columns={columns} dataSource={dataSource} />
+        <Table loading={isLoadingStaffs} rowSelection={rowSelection} columns={columns} dataSource={staffs} />
       </Flex>
     </>
   )
